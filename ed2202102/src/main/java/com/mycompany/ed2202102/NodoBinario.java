@@ -2,8 +2,8 @@ package com.mycompany.ed2202102;
 public class NodoBinario<K,V>{
     private K clave;
     private V valor;
-    NodoBinario<K,V> hijoIzquierdo;
-    NodoBinario<K,V> hijoDerecho;
+    private NodoBinario<K,V> hijoIzquierdo;
+    private NodoBinario<K,V> hijoDerecho;
 
     public NodoBinario() {
     }

@@ -453,26 +453,30 @@ public class ArbolBinarioBusqueda<K extends Comparable<K>, V> implements IArbolB
         if (nodoActual.esHoja()) {
             return true;
         }
-        boolean verifIzq = unSoloHijo(nodoActual.getHijoIzquierdo());
-        boolean verifDer = unSoloHijo(nodoActual.getHijoDerecho());
-        boolean resul = verifIzq || verifDer;
+       
+        if (!unSoloHijo(nodoActual.getHijoIzquierdo())){
+            return false;
+        }
+        
+        if( !unSoloHijo(nodoActual.getHijoDerecho())){
+            return false;
+        }
         if ((!nodoActual.esVacioHijoDerecho() && nodoActual.esVacioHijoIzquierdo())
                 || (nodoActual.esVacioHijoDerecho() && !nodoActual.esVacioHijoIzquierdo())) {
-            resul = resul && true;
-        } else {
-            resul = false;
+            return true;
         }
-        return resul;
+        return false;
     }
 
     //retorna si todos los nodos de un arbol (menos las hojas) tienen un solo hijo antes del nivel N
+    // validar antes que nivelN sea valido o que el arbol no sea vacio
     public boolean unSoloHijoAntesN(int nivelN) {
         return unSoloHijoAntesN(this.raiz, nivelN, 0);
     }
 
     private boolean unSoloHijoAntesN(NodoBinario<K, V> nodoActual, int nivelN, int nivelActual) {
         if (NodoBinario.esNodoVacio(nodoActual)) {
-            return false;
+            return true;
         }
         if (nodoActual.esHoja()) {
             return true;

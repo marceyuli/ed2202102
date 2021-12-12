@@ -12,7 +12,11 @@ public class ArbolBinarioBusqueda<K extends Comparable<K>, V> implements IArbolB
     }
 
     protected NodoBinario<K, V> raiz;
-
+    /*
+    Implemente un método que reciba en listas de parámetros las llaves y valores de los
+    recorridos en postorden e inorden respectivamente y que reconstruya el árbol binario
+    original. Su método no debe usar el método insertar
+*/
     public ArbolBinarioBusqueda(List<K> clavesInOrden, List<V> valoresInOrden,
             List<K> clavesNoInOrden, List<V> valoresNoInOrden, boolean esConPreOrden) {
         if (clavesInOrden.size() != clavesNoInOrden.size()
@@ -364,6 +368,13 @@ public class ArbolBinarioBusqueda<K extends Comparable<K>, V> implements IArbolB
         return recorrido;
     }
 
+    private void insertarEnPilaRamaIzquierda(NodoBinario<K, V> nodoActual, Stack<NodoBinario<K, V>> pilaDeNodos) {
+        while (!NodoBinario.esNodoVacio(nodoActual)) {
+            pilaDeNodos.push(nodoActual);
+            nodoActual = nodoActual.getHijoIzquierdo();
+        }
+    }
+
     public List<K> recorridoInOrdenRec() {
         List<K> recorrido = new ArrayList<>();
         this.recorridoInOrdenRec(this.raiz, recorrido);
@@ -377,13 +388,6 @@ public class ArbolBinarioBusqueda<K extends Comparable<K>, V> implements IArbolB
         recorridoInOrdenRec(nodoActual.getHijoIzquierdo(), recorrido);
         recorrido.add(nodoActual.getClave());
         recorridoInOrdenRec(nodoActual.getHijoDerecho(), recorrido);
-    }
-
-    private void insertarEnPilaRamaIzquierda(NodoBinario<K, V> nodoActual, Stack<NodoBinario<K, V>> pilaDeNodos) {
-        while (!NodoBinario.esNodoVacio(nodoActual)) {
-            pilaDeNodos.push(nodoActual);
-            nodoActual = nodoActual.getHijoIzquierdo();
-        }
     }
 
     @Override
@@ -453,12 +457,12 @@ public class ArbolBinarioBusqueda<K extends Comparable<K>, V> implements IArbolB
         if (nodoActual.esHoja()) {
             return true;
         }
-       
-        if (!unSoloHijo(nodoActual.getHijoIzquierdo())){
+
+        if (!unSoloHijo(nodoActual.getHijoIzquierdo())) {
             return false;
         }
-        
-        if( !unSoloHijo(nodoActual.getHijoDerecho())){
+
+        if (!unSoloHijo(nodoActual.getHijoDerecho())) {
             return false;
         }
         if ((!nodoActual.esVacioHijoDerecho() && nodoActual.esVacioHijoIzquierdo())
@@ -495,5 +499,100 @@ public class ArbolBinarioBusqueda<K extends Comparable<K>, V> implements IArbolB
             return resul;
         }
         return true;
+    }
+
+    /*
+7. Implemente un método iterativo con el recorrido en inorden que retorne la cantidad de
+nodos que tienen ambos hijos distintos de vacío en un árbol binario
+     */
+    public int cantidadAmbosHijosNoVaciosInOrden() {
+        int contador = 0;
+        NodoBinario<K, V> nodoActual = this.raiz;
+        Stack<NodoBinario<K, V>> pila = new Stack<>();
+        insertarEnPilaRamaIzquierda(nodoActual, pila);
+        while (!pila.isEmpty()) {
+            nodoActual = pila.pop();
+            if (!nodoActual.esVacioHijoDerecho() && !nodoActual.esVacioHijoIzquierdo()) {
+                contador++;
+            }
+            if (!nodoActual.esVacioHijoDerecho()) {
+                insertarEnPilaRamaIzquierda(nodoActual.getHijoDerecho(), pila);
+            }
+        }
+        return contador;
+    }
+
+    /*
+    8. Implemente un método recursivo que retorne la cantidad de nodos que tienen un solo hijo
+    no vació*/
+    public int cantidadNodosUnSoloHijo() {
+        return cantidadNodosUnSoloHijo(this.raiz);
+    }
+
+    private int cantidadNodosUnSoloHijo(NodoBinario<K, V> nodoActual) {
+        if (NodoBinario.esNodoVacio(nodoActual)) {
+            return 0;
+        }
+        int cantIzq = cantidadNodosUnSoloHijo(nodoActual.getHijoIzquierdo());
+        int cantDer = cantidadNodosUnSoloHijo(nodoActual.getHijoDerecho());
+        int cantTotal = cantIzq + cantDer;
+        if ((nodoActual.esVacioHijoDerecho() && !nodoActual.esVacioHijoIzquierdo())
+                || (!nodoActual.esVacioHijoDerecho() && nodoActual.esVacioHijoIzquierdo())) {
+            cantTotal++;
+        }
+        return cantTotal;
+    }
+
+    /*9. Implemente un método iterativo con la lógica de un recorrido en inOrden que retorne el
+número de hijos vacios que tiene un árbol binario. */
+    public int cantHijosVaciosInOrden() {
+        int contador = 0;
+        Stack<NodoBinario<K, V>> pila = new Stack<>();
+        insertarEnPilaRamaIzquierda(this.raiz, pila);
+        while (!pila.isEmpty()) {
+            NodoBinario<K, V> nodoActual = pila.pop();
+            if (nodoActual.esVacioHijoDerecho() && nodoActual.esVacioHijoIzquierdo()) {
+                contador = contador + 2;
+            } else {
+                if (nodoActual.esVacioHijoDerecho() || nodoActual.esVacioHijoIzquierdo()) {
+                    contador++;
+                }
+            }
+            if (!nodoActual.esVacioHijoDerecho()) {
+                insertarEnPilaRamaIzquierda(nodoActual.getHijoDerecho(), pila);
+            }
+        }
+        return contador;
+    }
+    /*
+    11. Implemente un método privado que reciba un nodo binario de un árbol binario y que
+retorne cuál sería su predecesor inorden de la clave de dicho nodo. */
+    
+//Predecesor in orden 
+public NodoBinario<K, V> predecesorInOrden(NodoBinario<K, V> nodoRecibido) {
+        List<K> recorridoInOrden = new LinkedList<>();
+        recorridoInOrden = this.recorridoEnInOrden();
+        int posicionRecibido = this.posicionDeClave(nodoRecibido.getClave(), recorridoInOrden);
+        if(posicionRecibido == 0) {
+            //throw new RuntimeException("Nodo no tiene sucesor");
+            return null;
+        }
+        int posicionDelPredecesor = this.posicionDeClave(nodoRecibido.getClave(), recorridoInOrden) - 1;
+        K claveDelSucesor = recorridoInOrden.get(posicionDelPredecesor);
+        Queue<NodoBinario<K, V>> colaDeNodos = new LinkedList<>();
+        colaDeNodos.offer(this.raiz);
+        while(!colaDeNodos.isEmpty()) {
+            NodoBinario<K, V> nodoActual = colaDeNodos.poll();
+            if(nodoActual.getClave() == claveDelSucesor) {
+                return nodoActual;
+            }
+            if(!nodoActual.esVacioHijoIzquierdo()) {
+                colaDeNodos.offer(nodoActual.getHijoIzquierdo());
+            }
+            if(!nodoActual.esVacioHijoDerecho()) {
+                colaDeNodos.offer(nodoActual.getHijoDerecho());
+            }
+        }
+        return null;
     }
 }

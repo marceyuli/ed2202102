@@ -46,9 +46,9 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
         }
         NodoMVias<K,V> nodoActual = this.raiz;
         while(!NodoMVias.esNodoVacio(nodoActual)){
-            int posicionDeClaveAInsertar = this.getPosicionDeClave(nodoActual, claveAInsertar);
-            if(posicionDeClave != POSICION_INVALIDA){ //SI LA CLAVE ESTA EN EL NODO
-                nodoActual.setValor(posicionDeClave, valorAInsertar);
+            int posicionDeClaveAInsertar = this.obtenerPosicionDeClave(nodoActual, claveAInsertar);
+            if(posicionDeClaveAInsertar != POSICION_INVALIDA){ //SI LA CLAVE ESTA EN EL NODO
+                nodoActual.setValor(posicionDeClaveAInsertar, valorAInsertar);
                 nodoActual = NodoMVias.nodoVacio();
             }else{
                 if(nodoActual.esHoja()){
@@ -74,7 +74,47 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
         }
     
     }
-
+      private int obtenerPosicionDeClave(NodoMVias<K,V> nodoActual, K claveAInsertar){
+        int posicion = -1;
+        int i=0;
+        while(i<nodoActual.cantidadDeClavesNoVacias()){
+            if(claveAInsertar.compareTo(nodoActual.getClave(i))==0){
+                posicion=i;
+            }
+            i++;
+        }
+        return posicion;
+        
+    }
+         private int obtenerPosicionPorDondeBajar(NodoMVias<K,V> nodoActual, K claveAInsertar){
+        int i=0;
+        while(i<orden-1){
+            if(claveAInsertar.compareTo(nodoActual.getClave(i))<0){
+                return i;
+            }
+            i++;
+        }
+        return i;
+    }
+         private void insertarClaveYValorOrdenadaEnNodo(NodoMVias<K,V> nodoActual, K claveAInsertar, V valorAInsertar){
+       int cant = nodoActual.cantidadDeClavesNoVacias();
+       for(int i=0; i<cant; i++){
+           K claveActual = nodoActual.getClave(i);
+           if(claveAInsertar.compareTo(claveActual) < 0){
+               for(int k=cant; k>i;k--){
+                   K clave= nodoActual.getClave(k-1);
+                   V valor = nodoActual.getValor(k-1);
+                   nodoActual.setClave(k, clave);
+                   nodoActual.setValor(k, valor);
+               }
+               nodoActual.setClave(i, claveAInsertar);
+               nodoActual.setValor(i, valorAInsertar);
+               return;
+           }
+       }
+       nodoActual.setClave(cant, claveAInsertar);
+       nodoActual.setValor(cant, valorAInsertar);
+    }
     @Override
     public V eliminar(K claveAEliminar) throws ExcepcionClaveNoExiste {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

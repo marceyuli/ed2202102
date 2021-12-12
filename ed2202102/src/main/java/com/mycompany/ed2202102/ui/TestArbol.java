@@ -17,15 +17,26 @@ public class TestArbol {
         ArbolBinarioBusqueda<Integer,Integer> arbolPrueba = new ArbolBinarioBusqueda<>();
         
         
+        arbolPrueba.insertar(13, 1);
+        arbolPrueba.insertar(9, 1);
         arbolPrueba.insertar(15, 1);
-        arbolPrueba.insertar(7, 1);
-        arbolPrueba.insertar(27, 1);
-        arbolPrueba.insertar(5, 1);
-        arbolPrueba.insertar(6, 1);
-        arbolPrueba.insertar(35, 1);
-        arbolPrueba.insertar(34, 1);
-        arbolPrueba.insertar(33, 1);
-//        
+        arbolPrueba.insertar(1, 1);
+        arbolPrueba.insertar(14, 1);
+        arbolPrueba.insertar(16, 1);
+        arbolPrueba.insertar(10, 1);
+        arbolPrueba.insertar(2, 1);
+        arbolPrueba.insertar(11, 1);
+        
+        System.out.println("EJERCICIO 7: CANTIDAD DE NODOS QUE TIENEN AMBOS HIJOS DISTINTOS DE VACIO USANDO INORDEN");
+        System.out.println(arbolPrueba.cantidadAmbosHijosNoVaciosInOrden());
+        
+        System.out.println("EJERCICIO 8: CANTIDAD DE NODOS QUE TIENEN UN SOLO HIJO (RECURSIVO)");
+        System.out.println(arbolPrueba.cantNodosUnSoloHijo());
+        
+        System.out.println("EJERCICIO 9:CANTIDAD DE HIJOS VACIOS USANDO INORDEN");
+        System.out.println(arbolPrueba.cantHijosVaciosInOrden());
+   
+       System.out.println("EJERCICIO 10: RECONSTRUCCION DE ARBOL");
         List<Integer> clavesInOrden = new LinkedList<>();
         List<Integer> valoresInOrden = new LinkedList<>();
         List<Integer> clavesPostOrden = new LinkedList<>();
@@ -63,13 +74,13 @@ public class TestArbol {
         valoresPostOrden.add(29);
         valoresPostOrden.add(28);
         valoresPostOrden.add(15);
-        
+        System.out.println("claves in orden :" + clavesInOrden  );
+         System.out.println("claves post orden :" + clavesPostOrden  );
         ArbolBinarioBusqueda<Integer,Integer> arbolPrueba2 = new ArbolBinarioBusqueda<>(clavesInOrden,valoresInOrden,clavesPostOrden,valoresPostOrden,false);
         
-        System.out.println(arbolPrueba2.recorridoEnInOrden());
-//        int cantUnSoloHijo = arbolPrueba.cantNodosUnSoloHijo();
-//        System.out.println(cantUnSoloHijo);
-//        System.out.println(arbolPrueba.unSoloHijo()); 
-//        System.out.println(arbolPrueba.unSoloHijoAntesN(2));
+        
+        System.out.println("RECORRIDO PRE ORDEN DEL NUEVO ARBOL");
+        System.out.println(arbolPrueba2.recorridoEnPreOrden());
+
     }
 }

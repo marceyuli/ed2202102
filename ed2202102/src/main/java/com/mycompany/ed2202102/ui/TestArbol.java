@@ -4,6 +4,7 @@
  */
 package com.mycompany.ed2202102.ui;
 
+import com.mycompany.ed2202102.AVL;
 import com.mycompany.ed2202102.ArbolBinarioBusqueda;
 import com.mycompany.ed2202102.NodoBinario;
 import java.util.LinkedList;
@@ -15,6 +16,22 @@ import java.util.List;
  */
 public class TestArbol {
     public static void main(String[] args) {
+        System.out.println("EJ1: Insertar AVL: 1,2,3,4,5");
+        AVL<Integer,Integer> AVL = new AVL<>();
+        AVL.insertar(1, 1);
+        AVL.insertar(2, 2);
+        AVL.insertar(3, 1);
+        AVL.insertar(4, 1);
+        AVL.insertar(5, 1);
+     
+        System.out.println("Recorrido in orden:" + AVL.recorridoEnInOrden());
+        
+       
+        System.out.println("EJ2: ELIMINAR AVL: 3");
+        AVL.eliminarAVL(3);
+        System.out.println("Recorrido in Orden:" + AVL.recorridoEnInOrden());
+        
+        
         ArbolBinarioBusqueda<Integer,Integer> arbolPrueba = new ArbolBinarioBusqueda<>();
         
         
@@ -91,6 +108,7 @@ public class TestArbol {
         
         System.out.println("EJERCICIO 15, ES ARBOL SIMILAR? ARBOLPRUEBA Y ARBOLPRUEBA2");
         System.out.println(arbolPrueba.esArbolSimilar(arbolPrueba2));
+        
     }
 
 }

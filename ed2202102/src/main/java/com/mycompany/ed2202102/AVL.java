@@ -1,131 +1,158 @@
 package com.mycompany.ed2202102;
 import com.mycompany.ed2202102.ArbolBinarioBusqueda;
 import com.mycompany.ed2202102.ExcepcionClaveNoExiste;
-public class AVL <K extends Comparable<K>,V> extends ArbolBinarioBusqueda<K,V>{
-    
-    private static final byte TOPE_DIFERENCIA =1;
-
-    public void insertar(K claveAInsertar, V valorAInsertar){
-        if(valorAInsertar==null){
-            throw new RuntimeException("No se permite insertar valores nulos");
-        }
-        this.raiz= insertar(this.raiz,claveAInsertar, valorAInsertar);
-    }
-    
-    private NodoBinario<K,V> insertar(NodoBinario<K,V> nodoActual, K claveAInsertar, V valorAInsertar){
-        if(NodoBinario.esNodoVacio(nodoActual)){
-            NodoBinario<K,V> nuevoNodo = new NodoBinario<>(claveAInsertar,valorAInsertar);
-            return nuevoNodo;
-        }
-        K claveActual= nodoActual.getClave();
-        if(claveAInsertar.compareTo(claveActual)<0){
-            NodoBinario<K,V> nuevoSupuestoHijo = insertar(nodoActual.getHijoIzquierdo(),
-                                                          claveAInsertar, valorAInsertar);
-            nodoActual.setHijoIzquierdo(nuevoSupuestoHijo);
-            return balancear(nodoActual);
-        }
-        if(claveAInsertar.compareTo(claveActual)>0){
-            NodoBinario<K,V> nuevoSupuestoHijo = insertar(nodoActual.getHijoDerecho(),
-                                                          claveAInsertar, valorAInsertar);
-            nodoActual.setHijoDerecho(nuevoSupuestoHijo);
-            return balancear(nodoActual);
-        }
-        //Si llego hasta aqui quiere decir que en encontre en el arbol la clave que queria insertar.Entonces, actualiza
-        //el valor
-        nodoActual.setValor(valorAInsertar);
-        return nodoActual;
-    }
-    //EJERCICIO 2
+public class AVL<K extends Comparable<K>, V> extends ArbolBinarioBusqueda<K, V> {
+     private static final byte DIFERENCIA_MAXIMA = 1;
     
     @Override
-    public V eliminar(K claveAEliminar)throws ExcepcionClaveNoExiste{
-        V valorAEliminar = this.buscar(claveAEliminar);
-        if(valorAEliminar==null){
-            throw new ExcepcionClaveNoExiste();
+    public void insertar(K clave, V valor) {
+        if(clave == null) {
+            throw new IllegalArgumentException("Clave no puede ser nula");
         }
-        this.raiz = eliminar(this.raiz,claveAEliminar);
-        return valorAEliminar;
+        if(valor == null) {
+            throw new IllegalArgumentException("Valor no puede ser nula");
+        }
+        
+        super.raiz = this.insertar(this.raiz, clave, valor);
+        
+        
     }
-    private NodoBinario<K,V> eliminar(NodoBinario<K,V> nodoActual, K claveAEliminar){
+    private NodoBinario<K,V> insertar(NodoBinario<K,V> nodoActual, K claveInsertar, V valorInsertar) {
+        if(NodoBinario.esNodoVacio(nodoActual)) {
+            NodoBinario<K,V> nuevoNodo = new NodoBinario<>(claveInsertar, valorInsertar);
+            return nuevoNodo;
+        }
+        
         K claveActual = nodoActual.getClave();
-        if(claveAEliminar.compareTo(claveActual)<0){
-            NodoBinario<K,V> supuestoNuevoHijoIzquierdo = eliminar(nodoActual.getHijoIzquierdo(),claveAEliminar);
-            nodoActual.setHijoIzquierdo(supuestoNuevoHijoIzquierdo);
-            return balancear(nodoActual);
+        if(claveInsertar.compareTo(claveActual) > 0) {
+            NodoBinario<K,V> nuevoHijoDerecho = insertar(nodoActual.getHijoDerecho(), claveInsertar, valorInsertar);
+            nodoActual.setHijoDerecho(nuevoHijoDerecho);
+            return this.balancear(nodoActual);
+            //return nodoActual;
         }
-        if(claveAEliminar.compareTo(claveActual)>0){
-            NodoBinario<K,V> supuestoNuevoHijoDerecho = eliminar(nodoActual.getHijoDerecho(), claveAEliminar);
-            nodoActual.setHijoDerecho(supuestoNuevoHijoDerecho);
-            return balancear(nodoActual);
+        if(claveInsertar.compareTo(claveActual) < 0) {
+            NodoBinario<K,V> nuevoHijoizquierdo = insertar(nodoActual.getHijoIzquierdo(), claveInsertar, valorInsertar);
+            nodoActual.setHijoIzquierdo(nuevoHijoizquierdo);
+            return this.balancear(nodoActual);
+            //return nodoActual;
         }
-        //encontro el valor a eliminar
-        //1) ES HOJA
-        if(nodoActual.esHoja()){
-            return NodoBinario.nodoVacio();
-        }
-        //2) TIENE SOLO UN HIJO
-        if(nodoActual.esVacioHijoDerecho() && !nodoActual.esVacioHijoIzquierdo()){
-            return balancear(nodoActual.getHijoIzquierdo());
-        }
-        if(nodoActual.esVacioHijoIzquierdo() && !nodoActual.esVacioHijoDerecho()){
-            return balancear(nodoActual.getHijoDerecho());
-        }
-        //3) Tiene ambos hijos
-        NodoBinario<K,V> nodoSucesor = buscarSucesor(nodoActual.getHijoDerecho());
-        NodoBinario<K,V> supuestoNuevoHijo = eliminar(nodoActual.getHijoDerecho(),nodoSucesor.getClave());
-        nodoActual.setHijoDerecho(supuestoNuevoHijo);
-        nodoActual.setClave(nodoSucesor.getClave());
-        nodoActual.setValor(nodoSucesor.getValor());
-        return balancear(nodoActual);
-    }
-    
-    private NodoBinario<K,V> balancear(NodoBinario<K,V> nodoActual){
-        int alturaPorIzquierda = alturaRec(nodoActual.getHijoIzquierdo());
-        int alturaPorDerecha= alturaRec(nodoActual.getHijoDerecho());
-        int diferenciaDeAltura= alturaPorIzquierda - alturaPorDerecha;
-        if(diferenciaDeAltura > TOPE_DIFERENCIA){
-            //Rotacion a Derecha
-            NodoBinario<K,V> hijoIzquierdoDelActual = nodoActual.getHijoIzquierdo();
-            alturaPorIzquierda = alturaRec(hijoIzquierdoDelActual.getHijoIzquierdo());
-            alturaPorDerecha = alturaRec(hijoIzquierdoDelActual.getHijoDerecho());
-            if(alturaPorDerecha > alturaPorIzquierda){
-                return rotacionDobleADerecha(nodoActual);
-            }
-            return rotacionSimpleADerecha(nodoActual);
-        } else if (diferenciaDeAltura < -TOPE_DIFERENCIA){
-            NodoBinario<K,V> hijoDerechoDelActual = nodoActual.getHijoDerecho();
-            alturaPorIzquierda = alturaRec(hijoDerechoDelActual.getHijoIzquierdo());
-            alturaPorDerecha = alturaRec(hijoDerechoDelActual.getHijoDerecho());
-            if(alturaPorIzquierda > alturaPorDerecha){
-                return rotacionDobleAIzquierda(nodoActual);
-            }
-                return rotacionSimpleAIzquierda(nodoActual);
-        }
-        //si estoy por acá, quiere decir que no hay que hacer rotaciones
+        
+        //Si llego acac quiere decir que en el nodo actual esta la clave a insertar
+        
+        nodoActual.setValor(valorInsertar);
         return nodoActual;
     }
-    private NodoBinario<K,V> rotacionSimpleADerecha(NodoBinario<K,V> nodoActual){
+    
+    private NodoBinario<K,V> balancear(NodoBinario<K,V> nodoActual) {
+        int alturaRamaIzq = alturaRec(nodoActual.getHijoIzquierdo());
+        int alturaRamaDer = alturaRec(nodoActual.getHijoDerecho());
+        int diferencia = alturaRamaIzq - alturaRamaDer;
+        if(diferencia > DIFERENCIA_MAXIMA) {
+            //SI HAY QUE BALANCEAR
+            NodoBinario<K,V> hijoIzquierdo = nodoActual.getHijoIzquierdo();
+            alturaRamaIzq = alturaRec(hijoIzquierdo.getHijoIzquierdo());
+            alturaRamaDer = alturaRec(hijoIzquierdo.getHijoDerecho());
+            if(alturaRamaDer > alturaRamaIzq) {
+                return rotacionDobleDerecha(nodoActual);
+            } else {
+                return rotacionSimpleDerecha(nodoActual);
+            }            
+        } else if(diferencia < -DIFERENCIA_MAXIMA) {
+            NodoBinario<K,V> hijoDerecho = nodoActual.getHijoDerecho();
+            alturaRamaIzq = alturaRec(hijoDerecho.getHijoIzquierdo());
+            alturaRamaDer = alturaRec(hijoDerecho.getHijoDerecho());
+            if(alturaRamaDer > alturaRamaIzq) {
+                return rotacionSimpleIzquierda(nodoActual);
+            } else {
+                return rotacionDobleIzquierda(nodoActual);
+            }
+            
+        }
+        return nodoActual;
+    }
+    
+    private NodoBinario<K,V> rotacionSimpleDerecha(NodoBinario<K,V> nodoActual) {
         NodoBinario<K,V> nodoQueRota = nodoActual.getHijoIzquierdo();
         nodoActual.setHijoIzquierdo(nodoQueRota.getHijoDerecho());
         nodoQueRota.setHijoDerecho(nodoActual);
         return nodoQueRota;
     }
-    private NodoBinario<K,V> rotacionDobleADerecha(NodoBinario<K,V> nodoActual){
-        NodoBinario<K,V> nodoDePrimeraRotacion = rotacionSimpleAIzquierda(nodoActual.getHijoIzquierdo());
-        nodoActual.setHijoIzquierdo(nodoDePrimeraRotacion);
-        return rotacionSimpleADerecha(nodoActual);
+    
+    private NodoBinario<K,V> rotacionDobleDerecha(NodoBinario<K,V> nodoActual) {
+       NodoBinario<K,V> nodoQueRotaIzquierda = rotacionSimpleIzquierda(nodoActual.getHijoIzquierdo());
+        nodoActual.setHijoIzquierdo(nodoQueRotaIzquierda);
+        return this.rotacionSimpleDerecha(nodoActual);
     }
-     private NodoBinario<K,V> rotacionSimpleAIzquierda(NodoBinario<K,V> nodoActual){
-         NodoBinario<K,V> nodoQueRota = nodoActual.getHijoDerecho();
-         nodoActual.setHijoDerecho(nodoQueRota.getHijoIzquierdo());
-         nodoQueRota.setHijoIzquierdo(nodoActual);
-         return nodoActual;
-     }
-     private NodoBinario<K,V> rotacionDobleAIzquierda(NodoBinario<K,V> nodoActual){
-         NodoBinario<K,V> nodoDePrimeraRotacion= rotacionSimpleADerecha(nodoActual.getHijoDerecho());
-         nodoActual.setHijoDerecho(nodoDePrimeraRotacion);
-         return rotacionSimpleAIzquierda(nodoActual);
-     }
+    
+    private NodoBinario<K,V> rotacionSimpleIzquierda(NodoBinario<K,V> nodoActual) {
+        NodoBinario<K,V> nodoQueRota = nodoActual.getHijoDerecho();
+        nodoActual.setHijoDerecho(nodoQueRota.getHijoIzquierdo());
+        nodoQueRota.setHijoIzquierdo(nodoActual);
+        return nodoQueRota;
+    }
+    
+    private NodoBinario<K,V> rotacionDobleIzquierda(NodoBinario<K,V> nodoActual) {
+        NodoBinario<K,V> nodoQueRotaDerecha = rotacionSimpleDerecha(nodoActual.getHijoDerecho());
+        nodoActual.setHijoDerecho(nodoQueRotaDerecha);
+        return this.rotacionSimpleIzquierda(nodoActual);
+    }
     
     
+    public V eliminarAVL(K claveAEliminar) {
+        if (claveAEliminar == null) {
+            throw new IllegalArgumentException("Clave no puede ser nula");
+        }
+        V valorARetornar = this.buscar(claveAEliminar);
+        if (valorARetornar == null) {
+            throw new IllegalArgumentException("La clave no existe en el arbol");
+        }
+        this.raiz = eliminar(this.raiz, claveAEliminar);
+        return valorARetornar;
+    }
+
+    private NodoBinario<K, V> eliminar(NodoBinario<K, V> nodoActual, K claveAEliminar) {
+        K claveActual = nodoActual.getClave();
+        if (claveAEliminar.compareTo(claveActual) > 0) {
+            NodoBinario<K, V> posibleNuevoHijoDerecho = eliminar(nodoActual.getHijoDerecho(), claveAEliminar);
+            nodoActual.setHijoDerecho(posibleNuevoHijoDerecho);
+            return balancear(nodoActual);
+        }
+        if (claveAEliminar.compareTo(claveActual) < 0) {
+            NodoBinario<K, V> posibleNuevoHijoIzquierdo = eliminar(nodoActual.getHijoIzquierdo(), claveAEliminar);
+            nodoActual.setHijoIzquierdo(posibleNuevoHijoIzquierdo);
+            return balancear(nodoActual);
+        }
+        //si llego a este punto quiere decir que ya encontre el nodo donde
+        //esta la clave a eliminar
+        //caso 1: es hoja
+        if (nodoActual.esHoja()) {
+            return (NodoBinario<K, V>) NodoBinario.nodoVacio();
+        }
+        //caso 2:
+        //caso 2.1 solo tiene hijo izquierdo
+        if (!nodoActual.esVacioHijoIzquierdo() && nodoActual.esVacioHijoDerecho()) {
+            return balancear(nodoActual.getHijoIzquierdo());
+        }
+        //caso 2.1 solo tiene hijo derecho
+        if (!nodoActual.esVacioHijoDerecho() && nodoActual.esVacioHijoIzquierdo()) {
+            return balancear(nodoActual.getHijoDerecho());
+        }
+        //caso 3
+        NodoBinario<K, V> nodoReemplazo = this.buscarNodoSucesor(nodoActual.getHijoDerecho());
+        NodoBinario<K, V> posibleNuevoHijoDerecho = eliminar(nodoActual.getHijoDerecho(), nodoReemplazo.getClave());
+        nodoActual.setHijoDerecho(posibleNuevoHijoDerecho);
+        nodoActual.setClave(nodoReemplazo.getClave());
+        nodoActual.setValor(nodoReemplazo.getValor());
+        return balancear(nodoActual);
+    }
+
+    protected NodoBinario<K, V> buscarNodoSucesor(NodoBinario<K, V> nodoActual) {
+        NodoBinario<K, V> nodoAnterior;
+        do {
+            nodoAnterior = nodoActual;
+            nodoActual = nodoActual.getHijoIzquierdo();
+        } while (!NodoBinario.esNodoVacio(nodoActual));
+        return nodoAnterior;
+    
+    }
 }

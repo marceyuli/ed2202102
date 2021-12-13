@@ -60,4 +60,9 @@ public class NodoBinario<K,V>{
     public boolean esHoja(){
         return this.esVacioHijoDerecho() && this.esVacioHijoIzquierdo();
     }
+
+    @Override
+    public String toString() {
+        return "NodoBinario{" + "clave=" + clave + ", valor=" + valor + '}';
+    }
 }

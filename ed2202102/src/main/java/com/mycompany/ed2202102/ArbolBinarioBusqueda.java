@@ -578,12 +578,12 @@ public NodoBinario<K, V> predecesorInOrden(NodoBinario<K, V> nodoRecibido) {
             return null;
         }
         int posicionDelPredecesor = this.posicionDeClave(nodoRecibido.getClave(), recorridoInOrden) - 1;
-        K claveDelSucesor = recorridoInOrden.get(posicionDelPredecesor);
+        K claveDelPredecesor = recorridoInOrden.get(posicionDelPredecesor);
         Queue<NodoBinario<K, V>> colaDeNodos = new LinkedList<>();
         colaDeNodos.offer(this.raiz);
         while(!colaDeNodos.isEmpty()) {
             NodoBinario<K, V> nodoActual = colaDeNodos.poll();
-            if(nodoActual.getClave() == claveDelSucesor) {
+            if(nodoActual.getClave() == claveDelPredecesor) {
                 return nodoActual;
             }
             if(!nodoActual.esVacioHijoIzquierdo()) {
@@ -594,5 +594,9 @@ public NodoBinario<K, V> predecesorInOrden(NodoBinario<K, V> nodoRecibido) {
             }
         }
         return null;
+    }
+
+    public NodoBinario<K, V> getRaiz() {
+        return raiz;
     }
 }

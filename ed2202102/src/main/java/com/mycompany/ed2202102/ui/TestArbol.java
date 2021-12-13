@@ -5,6 +5,7 @@
 package com.mycompany.ed2202102.ui;
 
 import com.mycompany.ed2202102.ArbolBinarioBusqueda;
+import com.mycompany.ed2202102.NodoBinario;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,5 +83,11 @@ public class TestArbol {
         System.out.println("RECORRIDO PRE ORDEN DEL NUEVO ARBOL");
         System.out.println(arbolPrueba2.recorridoEnPreOrden());
 
+        System.out.println("Ejercicio 11, pasar un nodo y que devuelta el predecesor");
+        System.out.println(arbolPrueba.recorridoEnInOrden());
+        System.out.println("Se le pasara la raiz");
+        System.out.println("predecesor =");
+        System.out.println(arbolPrueba.predecesorInOrden(arbolPrueba.getRaiz()));
     }
+
 }

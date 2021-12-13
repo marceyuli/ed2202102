@@ -599,4 +599,35 @@ public NodoBinario<K, V> predecesorInOrden(NodoBinario<K, V> nodoRecibido) {
     public NodoBinario<K, V> getRaiz() {
         return raiz;
     }
+/* Para un árbol binario de búsqueda implemente un método que reciba como parámetro otro
+árbol y que retorne verdadero si los arboles son similares, falso en caso contrario. */
+    public boolean esArbolSimilar(ArbolBinarioBusqueda<K,V> arbol2){
+          boolean flag= true;
+          flag= esArbolSimilar(this.raiz, arbol2.raiz,flag);
+          return flag;
+      }
+      private boolean esArbolSimilar(NodoBinario<K,V> nodoActual, NodoBinario<K,V> nodoActualDos,boolean flag){
+          if(NodoBinario.esNodoVacio(nodoActual)&&(NodoBinario.esNodoVacio(nodoActualDos))){
+              return true;
+          }
+          else if(!NodoBinario.esNodoVacio(nodoActual)&&(NodoBinario.esNodoVacio(nodoActualDos))){
+              return false;
+          }
+          else if(NodoBinario.esNodoVacio(nodoActual)&&(!NodoBinario.esNodoVacio(nodoActualDos))){
+              return false;
+          }
+          else{
+              boolean porIzquierda= esArbolSimilar(nodoActual.getHijoIzquierdo(),nodoActualDos.getHijoIzquierdo(),flag);
+              boolean porDerecha= esArbolSimilar(nodoActual.getHijoDerecho(),nodoActualDos.getHijoDerecho(),flag);
+              if(porIzquierda&&porDerecha){
+                  flag=true;
+              }
+              else{
+                  flag=false;
+              }
+          }
+          return flag;
+      }
+    
+    
 }

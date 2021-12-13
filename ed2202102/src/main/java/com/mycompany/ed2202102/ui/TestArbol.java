@@ -88,6 +88,9 @@ public class TestArbol {
         System.out.println("Se le pasara la raiz");
         System.out.println("predecesor =");
         System.out.println(arbolPrueba.predecesorInOrden(arbolPrueba.getRaiz()));
+        
+        System.out.println("EJERCICIO 15, ES ARBOL SIMILAR? ARBOLPRUEBA Y ARBOLPRUEBA2");
+        System.out.println(arbolPrueba.esArbolSimilar(arbolPrueba2));
     }
 
 }

@@ -25,9 +25,9 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
         this.orden = ORDEN_MINIMO;
     }
 
-    public ArbolMViasBusqueda(int orden) throws ExcepcionOrdenNoValido {
+    public ArbolMViasBusqueda(int orden) {
         if (orden < ArbolMViasBusqueda.ORDEN_MINIMO) {
-            throw new ExcepcionOrdenNoValido();
+            throw new RuntimeException("Orden invalido");
         }
         this.orden = orden;
     }
@@ -49,7 +49,7 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
             int posicionDeClaveAInsertar = this.obtenerPosicionDeClave(nodoActual, claveAInsertar);
             if(posicionDeClaveAInsertar != POSICION_INVALIDA){ //SI LA CLAVE ESTA EN EL NODO
                 nodoActual.setValor(posicionDeClaveAInsertar, valorAInsertar);
-                nodoActual = NodoMVias.nodoVacio();
+                return;
             }else{
                 if(nodoActual.esHoja()){
                     if(nodoActual.estanClavesLlenas()){
@@ -59,12 +59,13 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
                     }else{
                         this.insertarClaveYValorOrdenadaEnNodo(nodoActual,claveAInsertar,valorAInsertar);
                     }
-                    nodoActual= NodoMVias.nodoVacio();
+                    return;
                 }else{
                     int posicionPorDondeBajar = this.obtenerPosicionPorDondeBajar(nodoActual, claveAInsertar);
                     if(nodoActual.esHijoVacio(posicionPorDondeBajar)){
                         NodoMVias<K,V> nuevoHijo = new NodoMVias<>(this.orden,claveAInsertar,valorAInsertar);
                         nodoActual.setHijo(posicionPorDondeBajar, nuevoHijo);
+                        return;
                     }else{
                         nodoActual = nodoActual.getHijo(posicionPorDondeBajar);
                     }
@@ -74,27 +75,24 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
         }
     
     }
-      private int obtenerPosicionDeClave(NodoMVias<K,V> nodoActual, K claveAInsertar){
-        int posicion = -1;
-        int i=0;
-        while(i<nodoActual.cantidadDeClavesNoVacias()){
-            if(claveAInsertar.compareTo(nodoActual.getClave(i))==0){
-                posicion=i;
-            }
-            i++;
-        }
-        return posicion;
-        
+      private int obtenerPosicionDeClave(NodoMVias<K,V> nodoActual, K claveABuscar){
+          for (int i = 0; i < nodoActual.cantidadDeClavesNoVacias(); i++) {
+              K claveActual = nodoActual.getClave(i);
+              if(claveABuscar.compareTo(claveActual)==0){
+                  return i;
+              }
+          }
+        return ArbolMViasBusqueda.POSICION_INVALIDA;
     }
          private int obtenerPosicionPorDondeBajar(NodoMVias<K,V> nodoActual, K claveAInsertar){
         int i=0;
-        while(i<orden-1){
+        while(i<nodoActual.cantidadDeClavesNoVacias()){
             if(claveAInsertar.compareTo(nodoActual.getClave(i))<0){
                 return i;
             }
             i++;
         }
-        return i;
+        return nodoActual.cantidadDeClavesNoVacias();
     }
          private void insertarClaveYValorOrdenadaEnNodo(NodoMVias<K,V> nodoActual, K claveAInsertar, V valorAInsertar){
        int cant = nodoActual.cantidadDeClavesNoVacias();
@@ -170,7 +168,7 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
 
     @Override
     public boolean esArbolVacio() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return  this.raiz == NodoMVias.nodoVacio();
     }
 
     @Override

@@ -114,8 +114,89 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
        nodoActual.setValor(cant, valorAInsertar);
     }
     @Override
-    public V eliminar(K claveAEliminar) throws ExcepcionClaveNoExiste {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public V eliminar (K claveAEliminar) {
+        V valorAEliminar = this.buscar(claveAEliminar);
+        if(valorAEliminar == null ){
+            throw new RuntimeException("El valor no existe");
+        }
+        this.raiz = eliminar(this.raiz, claveAEliminar);
+        return valorAEliminar;
+    }
+
+    private NodoMVias<K,V> eliminar(NodoMVias<K,V> nodoActual, K claveAEliminar){
+        //orden 10 - cantidad=9 - i solo llega a 8
+        for(int i=0; i< nodoActual.cantidadDeClavesNoVacias(); i++){
+            K claveActual = nodoActual.getClave(i);
+            if(claveAEliminar.compareTo(claveActual)==0){
+                if(nodoActual.esHoja()){
+                    this.eliminarClaveYValorDelNodo(nodoActual,i);
+                    if(nodoActual.cantidadDeClavesNoVacias()==0){
+                        return NodoMVias.nodoVacio();
+                    }
+                    return nodoActual;
+                }
+                //No es hoja el nodo Actual
+                K claveDeReemplazo;
+                if(hayHijosMasAdelante(nodoActual, i)){
+                    claveDeReemplazo = buscarClaveSucesoraInOrden(nodoActual, claveAEliminar);
+                } else{
+                    claveDeReemplazo = buscarClavePredecesoraInOrden(nodoActual, claveAEliminar);
+                }
+                V valorDeReemplazo = buscar(claveDeReemplazo);
+                nodoActual = eliminar(nodoActual, claveDeReemplazo);
+                nodoActual.setClave(i, claveDeReemplazo);
+                nodoActual.setValor(i, valorDeReemplazo);
+                return nodoActual;
+            }
+            //no esta en la posicion i del nodoActual
+            if(claveAEliminar.compareTo(claveActual)<0){
+                NodoMVias<K,V> supuestoNuevoHijo = this.eliminar(nodoActual.getHijo(i), claveAEliminar);
+                nodoActual.setHijo(i, supuestoNuevoHijo);
+                return nodoActual;
+            }
+        }
+        //si llego aqui sin retornar quiere decir que nunca baje por ningun lado ni lo encontre
+        NodoMVias<K,V> supuestoNuevoHijo = this.eliminar(nodoActual.getHijo(nodoActual.cantidadDeClavesNoVacias()), claveAEliminar);
+        nodoActual.setHijo(nodoActual.cantidadDeClavesNoVacias(), supuestoNuevoHijo);
+        return nodoActual;
+    }
+ private void eliminarClaveYValorDelNodo(NodoMVias<K,V> nodoActual, int i){
+        int cant = nodoActual.cantidadDeClavesNoVacias();
+        for (int k = i; k < cant - 1; k++) {
+            K claveNuevo = nodoActual.getClave(k + 1);
+            V valorNuevo = nodoActual.getValor(k + 1);
+            nodoActual.setClave(k, claveNuevo);
+            nodoActual.setValor(k, valorNuevo);
+        }
+        nodoActual.setClave(cant - 1, (K) NodoMVias.datoVacio());
+        nodoActual.setValor(cant - 1, (V) NodoMVias.datoVacio());
+    }
+  private boolean hayHijosMasAdelante (NodoMVias<K,V> nodoActual, int i) {
+        for (int j = i + 1; j < orden; j++) {
+            if (!NodoMVias.esNodoVacio(nodoActual.getHijo(j))) {
+                return true;
+            }
+        }
+        return false;
+    }
+ private K buscarClavePredecesoraInOrden (NodoMVias<K,V> nodoActual, K claveAEliminar) {
+        if (this.contiene(claveAEliminar)) {
+            List<K> datos = new LinkedList<>();
+            this.recorrridoEnInOrden(nodoActual, datos);
+            int ind = indiceDe(datos, claveAEliminar);
+            return datos.get(ind - 1);
+        }
+        return (K) NodoMVias.datoVacio();
+    }
+
+    private K buscarClaveSucesoraInOrden (NodoMVias<K,V> nodoActual, K claveAEliminar) {
+        if (this.contiene(claveAEliminar)) {
+            List<K> datos = new LinkedList<>();
+            recorrridoEnInOrden(nodoActual, datos);
+            int ind = indiceDe(datos, claveAEliminar);
+            return datos.get(ind + 1);
+        }
+        return (K) NodoMVias.datoVacio();
     }
 
     @Override
@@ -145,10 +226,19 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
         return (V) NodoMVias.datoVacio();
 
     }
+    private int indiceDe(List<K> datos, K clave) {
+        for (int i = 0; i < datos.size(); i++) {
+            K claveActual = datos.get(i);
+            if (clave.compareTo(claveActual) == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     @Override
-    public boolean contiene(K claveABuscar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   public boolean contiene (K clave) {
+        return this.buscar(clave) != NodoMVias.nodoVacio();
     }
 
     @Override
@@ -202,9 +292,26 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
     }
 
     @Override
-    public List<K> recorridoEnInOrden() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   public List<K> recorridoEnInOrden () {
+        List<K> recorrido = new LinkedList<>();
+        recorrridoEnInOrden(this.raiz, recorrido);
+        return recorrido;
     }
+
+
+    private void recorrridoEnInOrden(NodoMVias<K, V> nodoActual, List<K> recorrido) {
+        if (NodoMVias.esNodoVacio(nodoActual)) {
+            return;
+        }
+        int cant = nodoActual.cantidadDeClavesNoVacias();
+        for (int i = 0; i < cant; i++) {
+            K claveActual = nodoActual.getClave(i);
+            this.recorrridoEnInOrden(nodoActual.getHijo(i), recorrido);
+            recorrido.add(claveActual);
+        }
+        this.recorrridoEnInOrden(nodoActual.getHijo(cant), recorrido);
+    }
+
 
     @Override
     public List<K> recorridoEnPostOrden() {

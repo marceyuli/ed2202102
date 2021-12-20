@@ -288,7 +288,21 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
 
     @Override
     public List<K> recorridoEnPreOrden() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<K> recorrido = new LinkedList<>();
+        recorridoEnPreOrden(this.raiz,recorrido);
+        return recorrido;
+    }
+    private void recorridoEnPreOrden(NodoMVias<K,V> nodoActual, List<K> recorrido){
+        if(NodoMVias.esNodoVacio(nodoActual)){
+            return;
+        }
+        int cant = nodoActual.cantidadDeClavesNoVacias();
+        for (int i = 0; i < cant; i++) {
+            K claveActual = nodoActual.getClave(i);
+            recorrido.add(claveActual);
+            recorridoEnPreOrden(nodoActual.getHijo(i), recorrido);
+        }
+        this.recorridoEnPreOrden(nodoActual.getHijo(cant), recorrido);
     }
 
     @Override

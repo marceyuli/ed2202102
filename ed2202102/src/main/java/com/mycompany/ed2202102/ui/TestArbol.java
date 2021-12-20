@@ -43,9 +43,13 @@ public class TestArbol {
             arbolM.insertar(150, 1);
             arbolM.insertar(130, 1);
             arbolM.insertar(50, 1);
+            arbolM.insertar(100, 1);
+            arbolM.insertar(300, 1);
             System.out.println("recorrido por niveles" + arbolM.recorridoPorNiveles());
              System.out.println("recorrido preorden" + arbolM.recorridoEnPreOrden());
              System.out.println("recorrido postOrden" + arbolM.recorridoEnPostOrden());
+             System.out.println("Ejercicio 12: verificar si todos los nodos son completos en arbol m vias (usaremos el nivel 0 para probar)");
+             System.out.println(arbolM.todosNodosCompletosEnNivelN(0));
             System.out.println("Ejercicio 6: eliminar del arbol m vias, el nodo 80");
             arbolM.eliminar(80);
              System.out.println("recorrido por niveles" + arbolM.recorridoPorNiveles());

@@ -368,5 +368,47 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
             recorrido.add(nodoActual.getClave(i));
         }
     }
-
+    /* PRACTICO */
+    /*Implemente un método que retorne verdadero si solo hay nodos completos en el nivel n de 
+un árbol m vias. Falso en caso contrario*/
+    public boolean todosNodosCompletosEnNivelN(int nivelN){
+        Queue<NodoMVias<K,V>> colaDeNodos = new LinkedList<>();
+        colaDeNodos.offer(this.raiz);
+        return todosNodosCompletosEnNivelN(colaDeNodos,0,nivelN);
+    }
+    private boolean todosNodosCompletosEnNivelN(Queue<NodoMVias<K,V>> colaDeNodos, int nivelActual,int nivelN){
+        if(colaDeNodos.isEmpty() && nivelActual== nivelN){
+            return false;
+        }
+        //ya estoy en el nivel cuestionado
+        if(nivelActual== nivelN){
+            boolean todosNodosCompletos = true;
+            while(!colaDeNodos.isEmpty() && true){
+                NodoMVias<K,V> nodoActualDeLaCola = colaDeNodos.poll();
+                todosNodosCompletos = todosNodosCompletos && esNodoCompleto(nodoActualDeLaCola);
+            }
+            return todosNodosCompletos;
+        }
+       
+            //NO ESTOY EN EL NIVEL CUESTIONADO
+            //metemos el siguiente nivel a la cola
+            int cantidadNivelActual =colaDeNodos.size();
+            for (int i = 0; i < cantidadNivelActual; i++) {
+               NodoMVias<K,V> nodoActualDeLaCola = colaDeNodos.poll();
+                meterHijosEnCola(nodoActualDeLaCola,colaDeNodos);
+            }
+            nivelActual = nivelActual +1;
+            return todosNodosCompletosEnNivelN(colaDeNodos,nivelActual,nivelN);
+       
+    }
+    public boolean esNodoCompleto(NodoMVias<K,V> nodoCuestionado){
+        return nodoCuestionado.estanClavesLlenas() && nodoCuestionado.cantidadDeHijossNoVacios()== orden;
+    }
+    public void meterHijosEnCola(NodoMVias<K,V> nodoAMeterHijos, Queue<NodoMVias<K,V>> colaDeNodos){
+        for (int i = 0; i < nodoAMeterHijos.cantidadDeClavesNoVacias(); i++) {
+            NodoMVias<K,V> HijoEnPosicion = nodoAMeterHijos.getHijo(i);
+            colaDeNodos.offer(HijoEnPosicion);
+        }
+        colaDeNodos.offer(nodoAMeterHijos.getHijo(nodoAMeterHijos.cantidadDeClavesNoVacias()));
+    }
 }

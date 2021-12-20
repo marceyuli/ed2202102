@@ -6,6 +6,7 @@ package com.mycompany.ed2202102.ui;
 
 import com.mycompany.ed2202102.AVL;
 import com.mycompany.ed2202102.ArbolBinarioBusqueda;
+import com.mycompany.ed2202102.ArbolBinarioBusquedaEnteroCadena;
 import com.mycompany.ed2202102.ArbolMViasBusqueda;
 import com.mycompany.ed2202102.ExcepcionOrdenNoValido;
 import com.mycompany.ed2202102.NodoBinario;
@@ -142,8 +143,11 @@ public class TestArbol {
             
             System.out.println("EJERCICIO 15, ES ARBOL SIMILAR? ARBOLPRUEBA Y ARBOLPRUEBA2");
             System.out.println(arbolPrueba.esArbolSimilar(arbolPrueba2));
-        
-        
+        System.out.println("EJERCICIO 13, IMPELEMENTE ARBOL BINARIO BUSQUEDA ENTERO CADENA ");
+        ArbolBinarioBusquedaEnteroCadena arbolNuevo = new ArbolBinarioBusquedaEnteroCadena();
+        arbolNuevo.insertar(8, "Hola");
+        System.out.println("recorrido in orden del arbol entero cadena");
+        System.out.println(arbolNuevo.recorridoEnInOrden());
     }
 
 }

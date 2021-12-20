@@ -124,7 +124,6 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
     }
 
     private NodoMVias<K,V> eliminar(NodoMVias<K,V> nodoActual, K claveAEliminar){
-        //orden 10 - cantidad=9 - i solo llega a 8
         for(int i=0; i< nodoActual.cantidadDeClavesNoVacias(); i++){
             K claveActual = nodoActual.getClave(i);
             if(claveAEliminar.compareTo(claveActual)==0){
@@ -258,14 +257,28 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
     }
 
     @Override
-    public int altura() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   public int altura () {
+        return altura(this.raiz);
+    }
+
+    public int altura(NodoMVias<K,V> nodoActual){
+        if(NodoMVias.esNodoVacio(nodoActual)){
+            return 0;
+        }
+        int alturaMayor = 0;
+        for(int i=0;i<this.orden;i++){
+            int alturaActual = altura(nodoActual.getHijo(i));
+            if(alturaActual>alturaMayor){
+                alturaMayor= alturaActual;
+            }
+        }
+        return alturaMayor+1;
     }
 
     @Override
-    public void vaciar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+ public void vaciar () {
+        this.raiz = NodoMVias.nodoVacio();
+    }    
 
     @Override
     public boolean esArbolVacio() {

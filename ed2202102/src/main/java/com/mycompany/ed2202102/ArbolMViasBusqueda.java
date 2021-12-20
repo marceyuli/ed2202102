@@ -243,7 +243,18 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return size(this.raiz);
+    }
+    private int size(NodoMVias nodoActual){
+       if(NodoMVias.esNodoVacio(nodoActual)){
+           return 0;
+       }
+      int sizeAcumulado=0;
+        for (int i = 0; i < orden; i++) {
+            int sizeDeHijo = size(nodoActual.getHijo(i));
+            sizeAcumulado+= sizeDeHijo;
+        }
+        return sizeAcumulado+1;
     }
 
     @Override

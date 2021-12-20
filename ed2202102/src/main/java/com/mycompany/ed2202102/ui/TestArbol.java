@@ -50,6 +50,18 @@ public class TestArbol {
              System.out.println("recorrido postOrden" + arbolM.recorridoEnPostOrden());
              System.out.println("Ejercicio 12: verificar si todos los nodos son completos en arbol m vias (usaremos el nivel 0 para probar)");
              System.out.println(arbolM.todosNodosCompletosEnNivelN(0));
+             System.out.println("ejercicio 13: verificar arboles similares m vias \"arbolM y ArbolM2\"");
+             ArbolMViasBusqueda<Integer,Integer> arbolM2 = new ArbolMViasBusqueda<>(4);
+            arbolM2.insertar(240, 1);
+            arbolM2.insertar(400, 1);
+            arbolM2.insertar(160, 1);
+            arbolM2.insertar(300, 1);
+            arbolM2.insertar(260, 1);
+            arbolM2.insertar(100, 1);
+            arbolM2.insertar(200, 1);
+            arbolM2.insertar(600, 1);
+            System.out.println(arbolM.esSimilar(arbolM2));
+            
             System.out.println("Ejercicio 6: eliminar del arbol m vias, el nodo 80");
             arbolM.eliminar(80);
              System.out.println("recorrido por niveles" + arbolM.recorridoPorNiveles());

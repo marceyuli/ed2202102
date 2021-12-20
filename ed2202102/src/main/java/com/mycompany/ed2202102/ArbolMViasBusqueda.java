@@ -329,7 +329,20 @@ public class ArbolMViasBusqueda<K extends Comparable<K>, V>
 
     @Override
     public List<K> recorridoEnPostOrden() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LinkedList<K> recorrido = new LinkedList<>();
+        recorridoEnPostOrden(this.raiz, recorrido);
+        return recorrido;
+    }
+    private void recorridoEnPostOrden(NodoMVias<K,V> nodoActual, LinkedList<K> recorrido){
+        if(NodoMVias.esNodoVacio(nodoActual)){
+            return;
+        }
+        int cant = nodoActual.cantidadDeClavesNoVacias();
+        recorridoEnPostOrden(nodoActual.getHijo(0), recorrido);
+        for (int i = 0; i < cant; i++) {
+            recorridoEnPostOrden(nodoActual.getHijo(i+1), recorrido);
+            recorrido.add(nodoActual.getClave(i));
+        }
     }
 
 }

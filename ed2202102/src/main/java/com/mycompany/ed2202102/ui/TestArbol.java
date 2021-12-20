@@ -45,7 +45,7 @@ public class TestArbol {
             arbolM.insertar(50, 1);
             System.out.println("recorrido por niveles" + arbolM.recorridoPorNiveles());
              System.out.println("recorrido preorden" + arbolM.recorridoEnPreOrden());
-            
+             System.out.println("recorrido postOrden" + arbolM.recorridoEnPostOrden());
             System.out.println("Ejercicio 6: eliminar del arbol m vias, el nodo 80");
             arbolM.eliminar(80);
              System.out.println("recorrido por niveles" + arbolM.recorridoPorNiveles());

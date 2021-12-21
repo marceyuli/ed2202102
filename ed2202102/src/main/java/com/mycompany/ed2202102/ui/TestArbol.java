@@ -80,6 +80,24 @@ public class TestArbol {
             arbolPrueba.insertar(2, 1);
             arbolPrueba.insertar(11, 1);
             
+            ArbolBinarioBusqueda<Integer,Integer> arbolPrueba3 = new ArbolBinarioBusqueda<>();
+            
+            
+            arbolPrueba3.insertar(13, 1);
+            arbolPrueba3.insertar(9, 1);
+            arbolPrueba3.insertar(15, 1);
+            arbolPrueba3.insertar(1, 1);
+            arbolPrueba3.insertar(14, 1);
+            arbolPrueba3.insertar(16, 1);
+            arbolPrueba3.insertar(10, 1);
+            arbolPrueba3.insertar(2, 1);
+            arbolPrueba3.insertar(11, 1);
+            
+            System.out.println("++++++++++++++++++++++++++++++++++++++++");
+            System.out.println("Es arbol Identico? : " + arbolPrueba.esArbolIdentico(arbolPrueba3));
+            
+            System.out.println("SIZE: " + arbolPrueba3.sizeInterativoUsandoInOrden() );
+            
             System.out.println("EJERCICIO 7: CANTIDAD DE NODOS QUE TIENEN AMBOS HIJOS DISTINTOS DE VACIO USANDO INORDEN");
             System.out.println(arbolPrueba.cantidadAmbosHijosNoVaciosInOrden());
             

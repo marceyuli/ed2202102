@@ -629,5 +629,45 @@ public NodoBinario<K, V> predecesorInOrden(NodoBinario<K, V> nodoRecibido) {
           return flag;
       }
     
-    
+    //PRACTICA APARTE 
+      //Es arbol identico?
+      public boolean esArbolIdentico(ArbolBinarioBusqueda arbol2){
+          boolean flag = true;
+          return esArbolIdentico(this.raiz, arbol2.raiz, flag);
+      }
+      private boolean esArbolIdentico(NodoBinario<K,V> unNodo, NodoBinario<K,V> otroNodo, boolean flag){
+          if(NodoBinario.esNodoVacio(unNodo) && NodoBinario.esNodoVacio(otroNodo)){
+              return true;
+          }
+          else if((!NodoBinario.esNodoVacio(unNodo) && NodoBinario.esNodoVacio(otroNodo))||
+                  NodoBinario.esNodoVacio(unNodo) && !NodoBinario.esNodoVacio(otroNodo)){
+              return false;
+          }
+          boolean verifIzq = esArbolIdentico(unNodo.getHijoIzquierdo(), otroNodo.getHijoIzquierdo(), flag);
+            boolean verifDer = esArbolIdentico(unNodo.getHijoDerecho(), otroNodo.getHijoDerecho(), flag);
+            flag= verifIzq && verifDer;
+          if(verifIzq && verifDer){
+             
+              if(unNodo.getClave().compareTo(otroNodo.getClave()) == 0){
+                  flag =  flag && true;
+              } else{
+                  flag = flag && false;
+              }
+          }
+          return flag;
+      }
+      public int sizeInterativoUsandoInOrden(){
+          int size =0;
+          Stack<NodoBinario<K,V>> pilaDeNodos = new Stack<>();
+          insertarEnPilaRamaIzquierda(this.raiz, pilaDeNodos);
+          while(!pilaDeNodos.empty()){
+              NodoBinario<K,V> nodoActual = pilaDeNodos.pop();
+              size++;
+              if(!nodoActual.esVacioHijoDerecho()){
+                  insertarEnPilaRamaIzquierda(nodoActual.getHijoDerecho(),pilaDeNodos);
+              }
+          }
+          return size;
+      }
+              
 }

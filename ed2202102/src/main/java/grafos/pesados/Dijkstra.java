@@ -62,7 +62,12 @@ public class Dijkstra {
             marcados.marcarVertice(verticeActual);
         }
         costoMinimo = listaDeCostos.get(verticeF);
-        marcados.desmarcarTodos();
+        marcados.desmarcarTodos(); 
+        pilaDeCaminos.push(verticeF);
+        while(predecesores.get(verticeF)!=-1 && verticeF!= verticeI){
+             pilaDeCaminos.push(predecesores.get(verticeF));
+             verticeF= predecesores.get(verticeF);
+        }
         /*
         pilaDeCaminos.push(verticeF);
         int verticeTurno = verticeF;
@@ -83,32 +88,40 @@ public class Dijkstra {
     }
 
     public double getCostoMinimo(int verticeI, int verticeF) {
-        caminoMinimo(verticeI, verticeF);
+        //caminoMinimo(verticeI, verticeF);
         //System.out.println(pilaDeCaminos);
         return costoMinimo;
 
     }
-
+    public String camino(){
+        String s = "";
+        Stack<Integer> pila = getPilaDeCaminos();
+        while(!pila.isEmpty()){
+            s= s + pila.pop() + "\n";
+        }
+        return s;
+    }
     /*
    15. Para un grafo dirigido pesado implementar el algoritmo de Dijkstra que muestre con que 
 vértices hay caminos de costo mínimo partiendo desde un vértice v, con qué costo y cuáles 
 son los caminos*/
-    public void caminosYCostosDesdeUnVertice(int v) {
+    public void caminosYCostosDesdeUnVertice(int verticeInicial) {
 
-        for (int i = 0; i < digrafo.cantidadDeVertices(); i++) {
-            String s = "De " + v + " a ";
-            if (i != v) {
-                caminoMinimo(v, i);
-                if (listaDeCostos.get(i) != INFINITO) {
-                    s = s + i + " cuesta " + getCostoMinimo(v, i) + " y el camino es [";
-
-                    while (!pilaDeCaminos.isEmpty()) {
-                        s = s + pilaDeCaminos.pop() + " ";
-                    }
+        for (int unDestino = 0; unDestino < digrafo.cantidadDeVertices(); unDestino++) {
+            String s = "De " + verticeInicial + " a ";
+            if(unDestino!=verticeInicial){
+                caminoMinimo(verticeInicial, unDestino);
+                if (listaDeCostos.get(unDestino) != INFINITO) {
+                    s = s + unDestino + " cuesta " + getCostoMinimo(verticeInicial, unDestino) + " y el camino es [" + "\n" ;
+                    s = s + camino();
+                    System.out.println("imprimio ya");
                 }
-                s = s + "]";
+                  s = s + "]";
                 System.out.println(s + "\n");
             }
+              
+                
+            
         }
     }
 }

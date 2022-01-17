@@ -18,9 +18,11 @@ public class Test {
         System.out.println(digrafo);
         System.out.println("Ejercicio 13 Algoritmo FLOYD WARSHALL que muestre costos y caminos de un vertice a todos los demas");
        FW ejecutar = new FW(digrafo);
+        System.out.println("Ejercicio 14 ");
         System.out.println(ejecutar.mostrarCostosYCaminos(2));
        Dijkstra dijkstra = new Dijkstra(digrafo);
-        System.out.println(dijkstra.getCostoMinimo(0, 3));
+      //  System.out.println(dijkstra.getCostoMinimo(0, 1));
+      //  dijkstra.imprimirCamino();
        dijkstra.caminosYCostosDesdeUnVertice(0);
     }
 }

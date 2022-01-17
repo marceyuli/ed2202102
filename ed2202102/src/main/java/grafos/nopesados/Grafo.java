@@ -108,4 +108,21 @@ public class Grafo {
             }
         }
     }
+      @Override
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < listaDeAdyacencias.size(); i++) {
+            List<Integer> listaDeAdyacentes = listaDeAdyacencias.get(i);
+            s = s + i + "  [ " + listaDeAdyacencias.get(i) + " ]-->[ ";
+            for (int j = 0; j < listaDeAdyacentes.size(); j++) {
+                if (j == listaDeAdyacentes.size() - 1) {
+                    s = s + "" + listaDeAdyacentes.get(j);
+                } else {
+                    s = s + "" + listaDeAdyacentes.get(j) + " , ";
+                }
+            }
+            s = s + " ]" + '\n';
+        }
+        return s;
+    }
 }

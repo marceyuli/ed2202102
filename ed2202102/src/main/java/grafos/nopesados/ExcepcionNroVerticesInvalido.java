@@ -8,7 +8,7 @@ package grafos.nopesados;
  *
  * @author marce
  */
-class ExcepcionNroVerticesInvalido extends Exception {
+public class ExcepcionNroVerticesInvalido extends Exception {
      public ExcepcionNroVerticesInvalido() {
         super("NRO VERTICES INVALIDO");
     }

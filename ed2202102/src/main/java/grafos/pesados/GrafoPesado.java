@@ -1,6 +1,7 @@
 
 package grafos.pesados;
 
+import grafos.nopesados.ExcepcionAristaNoExiste;
 import grafos.nopesados.ExcepcionAristaYaExiste;
 import grafos.nopesados.ExcepcionNroVerticesInvalido;
 import grafos.nopesados.UtilsRecorridos;
@@ -10,10 +11,10 @@ import java.util.List;
 
 public class GrafoPesado {
     protected List<List<AdyacentesConPeso>> listaDeAdyacencia;
-    private UtilsRecorridos controlMarcados;
+    protected UtilsRecorridos controlMarcados;
     public GrafoPesado () {
         this.listaDeAdyacencia = new ArrayList<>();
-        controlMarcados = new UtilsRecorridos(this.cantidadDeVertices());
+        controlMarcados = new UtilsRecorridos(listaDeAdyacencia.size());
     }
 
     public GrafoPesado (int nroInicialDeVertices) {
@@ -24,6 +25,7 @@ public class GrafoPesado {
         for(int i = 0; i < nroInicialDeVertices; i++) {
             this.insertarVertice();
         }
+        controlMarcados =new UtilsRecorridos(listaDeAdyacencia.size());
     }
 
 
@@ -105,7 +107,7 @@ public class GrafoPesado {
         return cantLazos + (cantAristas / 2);
     }
 
-
+/*
     public void eliminarArista(int posVerticeOrigen, int posVerticeDestino) {
         if(!this.existeAdyacencia(posVerticeOrigen, posVerticeDestino)) {
             throw new IllegalArgumentException("La arista ya existe");
@@ -122,7 +124,22 @@ public class GrafoPesado {
         }
     }
     //Modificar el eliminar
-
+*/
+    public void eliminarArista(int posVerticeOrigen, int posVerticeDestino) throws ExcepcionAristaNoExiste {
+        if (!this.existeAdyacencia(posVerticeOrigen, posVerticeDestino)) {
+            throw new ExcepcionAristaNoExiste();
+        }
+        List<AdyacentesConPeso> adyacentesDelVerticeOrigen = this.listaDeAdyacencia.get(posVerticeOrigen);
+        AdyacentesConPeso unAdyacenteConPeso = new AdyacentesConPeso(posVerticeDestino);
+        int posicionAristaAEliminar = adyacentesDelVerticeOrigen.indexOf(unAdyacenteConPeso);
+        adyacentesDelVerticeOrigen.remove(posicionAristaAEliminar);
+        if (posVerticeOrigen != posVerticeDestino) {
+            List<AdyacentesConPeso> adyacentesDelVerticeDestino = this.listaDeAdyacencia.get(posVerticeDestino);
+            unAdyacenteConPeso = new AdyacentesConPeso(posVerticeOrigen);
+            posicionAristaAEliminar = adyacentesDelVerticeDestino.indexOf(unAdyacenteConPeso);
+            adyacentesDelVerticeDestino.remove(posicionAristaAEliminar);
+        }
+    }
     public void eliminarVertice(int posDeVertice) {
         validarVertice(posDeVertice);
         listaDeAdyacencia.remove(posDeVertice);
@@ -165,17 +182,18 @@ public class GrafoPesado {
 
     public boolean hayCiclo(GrafoPesado grafoAux, int posVertice) throws ExcepcionAristaYaExiste {
         
-        controlMarcados.marcarVertice(posVertice);
-        List<AdyacentesConPeso> adyacentesDeVertice = listaDeAdyacencia.get(posVertice);
+        this.controlMarcados.marcarVertice(posVertice);
+        
+        Iterable<AdyacentesConPeso> adyacentesDeVertice = listaDeAdyacencia.get(posVertice);
         for (AdyacentesConPeso adyacentes : adyacentesDeVertice) {
             if(!controlMarcados.estaVerticeMarcado(adyacentes.getIndiceVertice())) {
                 if(!grafoAux.existeAdyacencia(posVertice, adyacentes.getIndiceVertice()) && posVertice != adyacentes.getIndiceVertice()) {
-                    grafoAux.insertarArista(posVertice, adyacentes.getIndiceVertice(),1);
+                    grafoAux.insertarArista(posVertice, adyacentes.getIndiceVertice(),adyacentes.getPeso());
                     hayCiclo(grafoAux, adyacentes.getIndiceVertice());
                 }
             } else {
                 if(!grafoAux.existeAdyacencia(posVertice, adyacentes.getIndiceVertice()) && posVertice != adyacentes.getIndiceVertice()) {
-                    grafoAux.insertarArista(posVertice, adyacentes.getIndiceVertice(),1);
+                    //grafoAux.insertarArista(posVertice, adyacentes.getIndiceVertice(),adyacentes.getPeso());
                     return true;
                 }
             }

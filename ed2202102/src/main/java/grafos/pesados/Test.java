@@ -41,6 +41,7 @@ public class Test {
        Kruskal kruskal = new Kruskal(grafo);
        System.out.println(kruskal.ProcesarKruskal());
        
+        System.out.println("PRIM");
        Prim arbol = new Prim(grafo);
         GrafoPesado resultado = arbol.arbol();
         System.out.println(resultado);
